@@ -1,0 +1,6 @@
+.snakemake/
+
+logs/
+benchmarks/
+
+manifest.csv

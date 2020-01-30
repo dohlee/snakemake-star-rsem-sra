@@ -1,0 +1,33 @@
+#!/bin/sh
+
+srp_id=0
+db=0
+
+while getopts "i:d:" option
+do
+    case $option in
+        i) srp_id="$OPTARG";;
+        d) db="$OPTARG";;
+        /?) echo "Usage: getmanifest -i [SRP_ID] -d [SRAmetadb]" 1>&2; exit 1;;
+    esac
+done
+
+if [ "$srp_id" = "0" ] ||[ "$db" = "0" ]; then
+    echo "Usage: getmanifest -i [SRP_ID] -d [SRAmetadb]" 1>&2
+    exit 1
+fi
+
+# If SRA metadata DB does not exist, download it.
+if [ ! -e "$db" ]; then
+    pysradb metadb --out-dir $(dirname "$db") --overwrite
+fi
+
+# Double-check if SRAmetadb exists.
+if [ ! -e "$db" ]; then
+    echo "Unexpected error while downloading SRA metadata DB. Please try again." 1>&2
+fi
+
+# Download SRP metadata.
+echo "Downloading metadata for $srp_id..." 1>&2
+pysradb metadata --db "$db" "$srp_id" --assay --desc --detailed --expand --saveto manifest.csv && sed -i 's/\t/,/g' manifest.csv
+echo "Done!" 1>&2
