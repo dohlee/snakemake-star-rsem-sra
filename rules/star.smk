@@ -226,8 +226,8 @@ rule star_2_pass:
         # Minimum overhang (i.e. block size) for spliced alignments.
         # Default: 5
         align_sj_overhang_min = c['align_sj_overhang_min'],
-    log: 'logs/star_2_pass_single/{sample}.log'
-    benchmark: 'benchmarks/star_2_pass_single/{sample}.benchmark'
+    log: 'logs/star_2_pass/{sample}.log'
+    benchmark: 'benchmarks/star_2_pass/{sample}.benchmark'
     wrapper:
         'http://dohlee-bio.info:9193/star/2-pass'
 
